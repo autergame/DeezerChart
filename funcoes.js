@@ -132,4 +132,4 @@ function carregarMais(dDiv, ntTbody) {
 
 let deezerUsuarioChartNext = "";
 let deezerUsuarioChartPosicao = 1;
-let deezerApiSite = "https://api.deezer.com";
+let deezerApiSite = "https://cors-anywhere.herokuapp.com/https://api.deezer.com";
