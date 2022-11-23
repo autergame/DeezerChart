@@ -60,7 +60,7 @@ body {
 	text-align: center;
 }
 
-.bFormDiv label {
+.bFormDiv label, h4 {
 	color: white;
 	font-weight: 700;
 }
