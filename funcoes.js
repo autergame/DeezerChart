@@ -1,4 +1,4 @@
-async function pesquisar() {
+function pesquisar() {
 	let Usuario = document.getElementById("txtUsuario").value;
 
 	if (Usuario.length == 0) {
@@ -8,34 +8,33 @@ async function pesquisar() {
 
 	window.localStorage.setItem("Usuario", Usuario);
 
-	let deezerProcurarUsuario = await solictar(deezerApiSite + "/search/user?q=" + Usuario);
-	let deezerUsuarioChart = await solictar(deezerApiSite + "/user/" + deezerProcurarUsuario.data[0].id + "/charts");
+	solictar(deezerApiSite + "/search/user?q=" + Usuario, function (deezerProcurarUsuario) {
+		solictar(deezerApiSite + "/user/" + deezerProcurarUsuario.data[0].id + "/charts", function (deezerUsuarioChart) {
+			deezerUsuarioChartPosicao = 1;
+			deezerUsuarioChartNext = deezerUsuarioChart.next;
 
-	deezerUsuarioChartPosicao = 1;
-	deezerUsuarioChartNext = deezerUsuarioChart.next;
+			let dDiv = document.querySelector(".dDiv");
+			while (dDiv.firstChild) {
+				dDiv.removeChild(dDiv.firstChild);
+			}
 
-	let dDiv = document.querySelector(".dDiv");
-	while (dDiv.firstChild) {
-		dDiv.removeChild(dDiv.firstChild);
-	}
-
-	let ntTbody = criarTabela(dDiv);
-	carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, true);
+			let ntTbody = criarTabela(dDiv);
+			carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, true);
+		});
+	});
 }
 
-function solictar(url) {
-	return new Promise(function (resolve, reject) {
-		let request = new XMLHttpRequest();
-		request.onload = function () {
-			if (request.status == 200) {
-				resolve(JSON.parse(request.responseText));
-			} else {
-				reject("Status code: " + request.status + " -> Meaning: https://developers.deezer.com/api/errors" + "\n" + request.responseText);
-			}
+function solictar(url, funcao) {
+	let request = new XMLHttpRequest();
+	request.onload = function () {
+		if (request.status == 200) {
+			funcao(JSON.parse(request.responseText));
+		} else {
+			alert("Status code: " + request.status + " -> Meaning: https://developers.deezer.com/api/errors" + "\n" + request.responseText);
 		}
-		request.open("GET", url, true);
-		request.send();
-	});
+	}
+	request.open("GET", url, true);
+	request.send();
 }
 
 function criarTabela(dDiv) {
@@ -123,12 +122,12 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, criarBotao) {
 	}
 }
 
-async function carregarMais(dDiv, ntTbody) {
-	let deezerUsuarioChart = await solictar(deezerUsuarioChartNext);
-	deezerUsuarioChartNext = deezerUsuarioChart.next;
+function carregarMais(dDiv, ntTbody) {
+	solictar(deezerUsuarioChartNext, function (deezerUsuarioChart) {
+		deezerUsuarioChartNext = deezerUsuarioChart.next;
 
-	carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, deezerUsuarioChartNext != undefined);
-
+		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, deezerUsuarioChartNext != undefined);
+	});
 }
 
 let deezerUsuarioChartNext = "";
