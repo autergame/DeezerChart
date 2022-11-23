@@ -7,10 +7,10 @@ function pesquisar() {
 
 	if (Usuario.length > 0) {
 		solicitar(deezerProxy(deezerApiSite + "/search/user?q=" + Usuario), function (deezerUsuarioID) {
-			solicitarUsuarioChart(deezerUsuarioID);
+			solicitarUsuarioChart(deezerUsuarioID.data[0].id);
 		});
 	} else if (ID.length > 0) {
-		solicitarUsuarioChart(ID)
+		solicitarUsuarioChart(ID);
 	} else {
 		alert("Fill all fields!");
 	}
