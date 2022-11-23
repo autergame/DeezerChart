@@ -97,13 +97,13 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, criarBotao) {
 
 		let tdTitle = document.createElement("td");
 		tdTitle.textContent = deezerUsuarioChart.data[i].title;
-		tdTitle.style.width = "300px";
+		tdTitle.style.maxWidth = "300px";
 		tdTitle.style.wordBreak = "break-word";
 		tr.appendChild(tdTitle);
 
 		let tdArtist = document.createElement("td");
 		tdArtist.textContent = deezerUsuarioChart.data[i].artist.name;
-		tdArtist.style.width = "100px";
+		tdArtist.style.maxWidth = "150px";
 		tdArtist.style.wordBreak = "break-word";
 		tr.appendChild(tdArtist);
 

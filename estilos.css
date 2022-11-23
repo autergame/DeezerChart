@@ -106,8 +106,8 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	background-color: rgb(64, 64, 64);
 	border-collapse: collapse;
+	background-color: rgb(64, 64, 64);
 }
 
 .ntTable th {
