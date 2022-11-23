@@ -8,8 +8,8 @@ function pesquisar() {
 
 	window.localStorage.setItem("Usuario", Usuario);
 
-	solictar(deezerApiSite + "/search/user?q=" + Usuario, function (deezerProcurarUsuario) {
-		solictar(deezerApiSite + "/user/" + deezerProcurarUsuario.data[0].id + "/charts", function (deezerUsuarioChart) {
+	solictar(deezerProxy(deezerApiSite + "/search/user?q=" + Usuario), function (deezerProcurarUsuario) {
+		solictar(deezerProxy(deezerApiSite + "/user/" + deezerProcurarUsuario.data[0].id + "/charts"), function (deezerUsuarioChart) {
 			deezerUsuarioChartPosicao = 1;
 			deezerUsuarioChartNext = deezerUsuarioChart.next;
 
@@ -123,14 +123,18 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, criarBotao) {
 }
 
 function carregarMais(dDiv, ntTbody) {
-	solictar(deezerProxy + deezerUsuarioChartNext, function (deezerUsuarioChart) {
+	solictar(deezerProxy(deezerUsuarioChartNext), function (deezerUsuarioChart) {
 		deezerUsuarioChartNext = deezerUsuarioChart.next;
 
 		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, deezerUsuarioChartNext != undefined);
 	});
 }
 
+function deezerProxy(url) {
+	return "http://www.whateverorigin.org/get?url=" + encodeURIComponent(url);
+}
+
 let deezerUsuarioChartNext = "";
 let deezerUsuarioChartPosicao = 1;
-let deezerProxy = "https://cors-anywhere.herokuapp.com/";
-let deezerApiSite = deezerProxy + "https://api.deezer.com";
+
+let deezerApiSite = "https://api.deezer.com";
