@@ -123,7 +123,7 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, criarBotao) {
 }
 
 function carregarMais(dDiv, ntTbody) {
-	solictar(deezerUsuarioChartNext, function (deezerUsuarioChart) {
+	solictar(deezerProxy + deezerUsuarioChartNext, function (deezerUsuarioChart) {
 		deezerUsuarioChartNext = deezerUsuarioChart.next;
 
 		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, deezerUsuarioChartNext != undefined);
@@ -132,4 +132,5 @@ function carregarMais(dDiv, ntTbody) {
 
 let deezerUsuarioChartNext = "";
 let deezerUsuarioChartPosicao = 1;
-let deezerApiSite = "https://cors-anywhere.herokuapp.com/https://api.deezer.com";
+let deezerProxy = "https://cors-anywhere.herokuapp.com/";
+let deezerApiSite = deezerProxy + "https://api.deezer.com";
