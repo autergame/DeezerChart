@@ -14,6 +14,10 @@
 				<input type="text" id="txtUsuario" name="nmUsuario" autocomplete="off" required />
 			</div>
 			<div class="bFormDiv">
+				<label for="txt">ID:</label>
+				<input type="text" id="txtID" name="nmID" autocomplete="off" required />
+			</div>
+			<div class="bFormDiv">
 				<button type="submit" onclick="pesquisar()">Submit</button>
 			</div>
 		</div>
@@ -79,6 +83,7 @@
 		});
 	}
 
+	document.getElementById("txtID").value = localStorage.getItem("ID");
 	document.getElementById("txtUsuario").value = localStorage.getItem("Usuario");
 </script>
 
