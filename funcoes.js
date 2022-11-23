@@ -1,18 +1,22 @@
 function pesquisar() {
 	let ID = document.getElementById("txtID").value;
+	let radioID = document.getElementById("radioID").checked;
 	let Usuario = document.getElementById("txtUsuario").value;
+	let radioUsuario = document.getElementById("radioUsuario").checked;
 
 	window.localStorage.setItem("ID", ID);
+	window.localStorage.setItem("RadioID", radioID);
 	window.localStorage.setItem("Usuario", Usuario);
+	window.localStorage.setItem("RadioUsuario", radioUsuario);
 
-	if (Usuario.length > 0) {
+	if (radioUsuario && (Usuario.length > 0)) {
 		solicitar(deezerProxy(deezerApiSite + "/search/user?q=" + Usuario), function (deezerUsuarioID) {
 			solicitarUsuarioChart(deezerUsuarioID.data[0].id);
 		});
-	} else if (ID.length > 0) {
+	} else if (radioID && (ID.length > 0)) {
 		solicitarUsuarioChart(ID);
 	} else {
-		alert("Fill all fields!");
+		alert("Check and Fill one of the fields!");
 	}
 }
 
@@ -138,7 +142,7 @@ function carregarMais(dDiv, ntTbody) {
 }
 
 function deezerProxy(url) {
-	return "https://api.codetabs.com/v1/proxy?quest=" + url;
+	return "https://api.codetabs.com/v1/proxy/?quest=" + url;
 }
 
 let deezerUsuarioChartNext = "";
