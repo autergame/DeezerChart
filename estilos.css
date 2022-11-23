@@ -71,6 +71,7 @@ body {
 .bFormDiv label {
 	color: white;
 	font-weight: 700;
+	margin-right: 3px;
 }
 
 .bFormDiv input[type=radio] {
@@ -104,6 +105,7 @@ body {
 }
 
 .bFormDiv input[type="text"] {
+	width: 13em;
 	color: white;
 	font-size: 15px;
 	font-weight: 700;
