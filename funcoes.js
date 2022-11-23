@@ -131,7 +131,7 @@ function carregarMais(dDiv, ntTbody) {
 }
 
 function deezerProxy(url) {
-	return "http://www.whateverorigin.org/get?url=" + encodeURIComponent(url);
+	return "https://api.codetabs.com/v1/proxy?quest=" + url;
 }
 
 let deezerUsuarioChartNext = "";
