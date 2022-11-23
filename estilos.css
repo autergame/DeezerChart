@@ -37,7 +37,7 @@ body {
 
 .bDiv {
 	margin-left: auto;
-    margin-right: auto;
+	margin-right: auto;
 	text-align: center;
 }
 
@@ -60,7 +60,13 @@ body {
 	text-align: center;
 }
 
-.bFormDiv label, h4 {
+.bFormDiv h4 {
+	color: white;
+	font-weight: 700;
+	padding-top: 0px;
+}
+
+.bFormDiv label {
 	color: white;
 	font-weight: 700;
 }
