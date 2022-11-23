@@ -1,30 +1,37 @@
 function pesquisar() {
+	let ID = document.getElementById("txtID").value;
 	let Usuario = document.getElementById("txtUsuario").value;
 
-	if (Usuario.length == 0) {
-		alert("Fill all fields!");
-		return;
-	}
-
+	window.localStorage.setItem("ID", ID);
 	window.localStorage.setItem("Usuario", Usuario);
 
-	solictar(deezerProxy(deezerApiSite + "/search/user?q=" + Usuario), function (deezerProcurarUsuario) {
-		solictar(deezerProxy(deezerApiSite + "/user/" + deezerProcurarUsuario.data[0].id + "/charts"), function (deezerUsuarioChart) {
-			deezerUsuarioChartPosicao = 1;
-			deezerUsuarioChartNext = deezerUsuarioChart.next;
-
-			let dDiv = document.querySelector(".dDiv");
-			while (dDiv.firstChild) {
-				dDiv.removeChild(dDiv.firstChild);
-			}
-
-			let ntTbody = criarTabela(dDiv);
-			carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, true);
+	if (Usuario.length > 0) {
+		solicitar(deezerProxy(deezerApiSite + "/search/user?q=" + Usuario), function (deezerUsuarioID) {
+			solicitarUsuarioChart(deezerUsuarioID);
 		});
+	} else if (ID.length > 0) {
+		solicitarUsuarioChart(ID)
+	} else {
+		alert("Fill all fields!");
+	}
+}
+
+function solicitarUsuarioChart(id) {
+	solicitar(deezerProxy(deezerApiSite + "/user/" + id + "/charts"), function (deezerUsuarioChart) {
+		deezerUsuarioChartPosicao = 1;
+		deezerUsuarioChartNext = deezerUsuarioChart.next;
+
+		let dDiv = document.querySelector(".dDiv");
+		while (dDiv.firstChild) {
+			dDiv.removeChild(dDiv.firstChild);
+		}
+
+		let ntTbody = criarTabela(dDiv);
+		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, true);
 	});
 }
 
-function solictar(url, funcao) {
+function solicitar(url, funcao) {
 	let request = new XMLHttpRequest();
 	request.onload = function () {
 		if (request.status == 200) {
@@ -123,7 +130,7 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, criarBotao) {
 }
 
 function carregarMais(dDiv, ntTbody) {
-	solictar(deezerProxy(deezerUsuarioChartNext), function (deezerUsuarioChart) {
+	solicitar(deezerProxy(deezerUsuarioChartNext), function (deezerUsuarioChart) {
 		deezerUsuarioChartNext = deezerUsuarioChart.next;
 
 		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, deezerUsuarioChartNext != undefined);
