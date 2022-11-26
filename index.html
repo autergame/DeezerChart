@@ -4,7 +4,7 @@
 	<title>DeezerChart</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
-	<link rel="stylesheet" href="estilos.css">
+	<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -16,17 +16,17 @@
 					<a href="https://github.com/autergame">autergame</a>
 				</div>
 				<div>
-					<input id="radioUsuario" type="radio" name="radioProcurar" checked />
-					<label for="txtUsuario">Username:</label>
-					<input type="text" id="txtUsuario" autocomplete="off" required />
+					<input id="radioUsername" type="radio" name="radioMode" checked />
+					<label for="txtUsername">Username:</label>
+					<input type="text" id="txtUsername" autocomplete="off" required />
 				</div>
 				<h4>Or</h4>
 				<div>
-					<input id="radioID" type="radio" name="radioProcurar" />
+					<input id="radioID" type="radio" name="radioMode" />
 					<label for="txtID">ID:</label>
 					<input type="text" id="txtID" autocomplete="off" required />
 				</div>
-				<button type="submit" onclick="pesquisar()">Submit</button>
+				<button type="submit" onclick="submit()">Submit</button>
 				<div>
 					<img id="loader" style="display:none" src="loading.svg" />
 					<h4 id="loaderText"></h4>
@@ -65,30 +65,30 @@
 </style>
 
 <script>
-	if (localStorage.getItem("Aviso") != "aceito") {
+	if (localStorage.getItem("Warning") != "accepted") {
 		$.confirm({
 			theme: 'dark',
 			type: "red",
 			typeAnimated: false,
-			title: "<strong>ATENÇÃO</strong>",
+			title: "<strong>WARNING</strong>",
 			content:
-				"Este site <strong>NÃO</strong> é o oficial do Deezer.<br>" +
-				"É um projeto pessoal que utiliza API de dados do <a href=\"https://developers.deezer.com/api\">Deezer</a>.<br>" +
-				"O autor e os envolvidos não se responsabilizam pelos dados exibidos ou como serão utilizados.<br>" +
-				"<br><strong>Você aceita esses termos?</strong>",
+				"This website is <strong>NOT</strong> official from <a href=\"https://deezer.com\">Deezer</a>.<br>" +
+				"It is a personal project that uses data API from <a href=\"https://developers.deezer.com/api\">Deezer</a>.<br>" +
+				"The author and those involved are not responsible for the data displayed or how they will be used.<br>" +
+				"<br><strong>Do you accept these terms?</strong>",
 			buttons: {
 				aceito: {
-					text: "Aceito!",
+					text: "I accept!",
 					btnClass: "btn-green",
 					action: function () {
-						window.localStorage.setItem("Aviso", "aceito");
+						window.localStorage.setItem("Warning", "accepted");
 					}
 				},
 				naoAceito: {
-					text: "Não aceito!",
+					text: "I do not accept!",
 					btnClass: "btn-red",
 					action: function () {
-						window.location.href = "https://google.com.br";
+						window.location.href = "https://google.com";
 					}
 				}
 			}
@@ -97,10 +97,10 @@
 
 	document.getElementById("txtID").value = localStorage.getItem("ID");
 	document.getElementById("radioID").checked = localStorage.getItem("RadioID") === "true";
-	document.getElementById("txtUsuario").value = localStorage.getItem("Usuario");
-	document.getElementById("radioUsuario").checked = localStorage.getItem("RadioUsuario") === "true";
+	document.getElementById("txtUsername").value = localStorage.getItem("Username");
+	document.getElementById("radioUsername").checked = localStorage.getItem("RadioUsername") === "true";
 </script>
 
-<script src="funcoes.js"></script>
+<script src="functions.js"></script>
 
 </html>

@@ -1,53 +1,53 @@
-async function pesquisar() {
+async function submit() {
 	let ID = document.getElementById("txtID").value;
 	let radioID = document.getElementById("radioID").checked;
-	let Usuario = document.getElementById("txtUsuario").value;
-	let radioUsuario = document.getElementById("radioUsuario").checked;
+	let Username = document.getElementById("txtUsername").value;
+	let radioUsername = document.getElementById("radioUsername").checked;
 
 	window.localStorage.setItem("ID", ID);
 	window.localStorage.setItem("RadioID", radioID);
-	window.localStorage.setItem("Usuario", Usuario);
-	window.localStorage.setItem("RadioUsuario", radioUsuario);
+	window.localStorage.setItem("Username", Username);
+	window.localStorage.setItem("RadioUsername", radioUsername);
 
-	if (radioUsuario && (Usuario.length > 0)) {
-		let deezerUsuarioID = await solicitar(deezerProxy(deezerApiSite + "/search/user?q=" + Usuario), "Searching username");
-		if (deezerUsuarioID != undefined) {
-			if (deezerUsuarioID.total != 0) {
-				await solicitarUsuarioChart(deezerUsuarioID.data[0].id);
+	if (radioID && (ID.length > 0)) {
+		await loadUserChart(ID);
+	}
+	else if (radioUsername && (Username.length > 0)) {
+		let deezerUserID = await request(deezerProxy(deezerApi + "/search/user?q=" + Username), "Searching ID from username");
+		if (deezerUserID != undefined) {
+			if (deezerUserID.total != 0) {
+				await loadUserChart(deezerUserID.data[0].id);
 			}
 			else {
 				alert("Username not found!");
 			}
 		}
 	}
-	else if (radioID && (ID.length > 0)) {
-		await solicitarUsuarioChart(ID);
-	}
 	else {
 		alert("Check and Fill one of the fields!");
 	}
 }
 
-async function solicitarUsuarioChart(id) {
-	let deezerUsuarioChart = await solicitar(deezerProxy(deezerApiSite + "/user/" + id + "/charts"), "Getting charts");
-	if (deezerUsuarioChart != undefined) {
-		deezerUsuarioChartPosicao = 1;
-		deezerUsuarioChartNext = deezerUsuarioChart.next;
+async function loadUserChart(id) {
+	let deezerUserChart = await request(deezerProxy(deezerApi + "/user/" + id + "/charts"), "Getting charts");
+	if (deezerUserChart != undefined) {
+		deezerUserChartPosition = 1;
+		deezerUserChartNext = deezerUserChart.next;
 
 		let dDiv = document.querySelector(".dDiv");
 		while (dDiv.firstChild) {
 			dDiv.removeChild(dDiv.firstChild);
 		}
 
-		let ntTbody = criarTabela(dDiv);
-		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, true);
+		let ntTbody = createTable(dDiv);
+		loadInTable(dDiv, ntTbody, deezerUserChart, true);
 	}
 	else {
 		alert("User chart or ID not found!");
 	}
 }
 
-async function solicitar(url, message) {
+async function request(url, message) {
 	let loader = document.getElementById("loader");
 	let loaderText = document.getElementById("loaderText");
 
@@ -81,7 +81,7 @@ async function solicitar(url, message) {
 			alert(
 				"Status code: " + xhr.status + "\n" +
 				"Status text: " + xhr.statusText + "\n" +
-				"Response text: " + hr.responseText
+				"Response text: " + xhr.responseText
 			);
 			resolve(undefined);
 		};
@@ -95,23 +95,23 @@ async function solicitar(url, message) {
 	return promiseReturn;
 }
 
-function criarTabela(dDiv) {
+function createTable(dDiv) {
 	let ntTable = document.createElement("table");
 	ntTable.className = "ntTable";
 
 	let ntTr = document.createElement("tr");
 
-	let ntThPosicao = document.createElement("th");
-	ntThPosicao.textContent = "#";
-	ntTr.appendChild(ntThPosicao);
+	let ntThPosition = document.createElement("th");
+	ntThPosition.textContent = "#";
+	ntTr.appendChild(ntThPosition);
 
-	let ntThTitulo = document.createElement("th");
-	ntThTitulo.textContent = "Title";
-	ntTr.appendChild(ntThTitulo);
+	let ntThTitle = document.createElement("th");
+	ntThTitle.textContent = "Title";
+	ntTr.appendChild(ntThTitle);
 
-	let ntThArtista = document.createElement("th");
-	ntThArtista.textContent = "Artist";
-	ntTr.appendChild(ntThArtista);
+	let ntThArtist = document.createElement("th");
+	ntThArtist.textContent = "Artist";
+	ntTr.appendChild(ntThArtist);
 
 	let ntThRank = document.createElement("th");
 	ntThRank.textContent = "Rank";
@@ -134,28 +134,28 @@ function criarTabela(dDiv) {
 	return ntTbody;
 }
 
-function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart) {
-	for (let i = 0; i < deezerUsuarioChart.data.length; i++) {
+function loadInTable(dDiv, ntTbody, deezerUserChart) {
+	for (let i = 0; i < deezerUserChart.data.length; i++) {
 		let tr = document.createElement("tr");
 
-		let tdPosicao = document.createElement("td");
-		tdPosicao.textContent = deezerUsuarioChartPosicao++;
-		tr.appendChild(tdPosicao);
+		let tdPosition = document.createElement("td");
+		tdPosition.textContent = deezerUserChartPosition++;
+		tr.appendChild(tdPosition);
 
 		let tdTitle = document.createElement("td");
-		tdTitle.textContent = deezerUsuarioChart.data[i].title;
+		tdTitle.textContent = deezerUserChart.data[i].title;
 		tdTitle.style.maxWidth = "300px";
 		tdTitle.style.wordBreak = "break-word";
 		tr.appendChild(tdTitle);
 
 		let tdArtist = document.createElement("td");
-		tdArtist.textContent = deezerUsuarioChart.data[i].artist.name;
+		tdArtist.textContent = deezerUserChart.data[i].artist.name;
 		tdArtist.style.maxWidth = "150px";
 		tdArtist.style.wordBreak = "break-word";
 		tr.appendChild(tdArtist);
 
 		let tdRank = document.createElement("td");
-		tdRank.textContent = deezerUsuarioChart.data[i].rank;
+		tdRank.textContent = deezerUserChart.data[i].rank;
 		tr.appendChild(tdRank);
 
 		ntTbody.appendChild(tr);
@@ -166,11 +166,11 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart) {
 		bButton.parentNode.removeChild(bButton);
 	}
 
-	if (deezerUsuarioChart.next != undefined) {
+	if (deezerUserChart.next != undefined) {
 		let dButton = document.createElement("button");
 		dButton.className = "bButton";
 		dButton.textContent = "Show more";
-		dButton.onclick = function () { carregarMais(dDiv, ntTbody) };
+		dButton.onclick = function () { showMore(dDiv, ntTbody) };
 
 		let bDiv = document.createElement("Div");
 		bDiv.className = "bDiv";
@@ -180,11 +180,11 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart) {
 	}
 }
 
-async function carregarMais(dDiv, ntTbody) {
-	let deezerUsuarioChart = await solicitar(deezerProxy(deezerUsuarioChartNext), "Loading more charts");
-	if (deezerUsuarioChart != undefined) {
-		deezerUsuarioChartNext = deezerUsuarioChart.next;
-		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart);
+async function showMore(dDiv, ntTbody) {
+	let deezerUserChart = await request(deezerProxy(deezerUserChartNext), "Loading more charts");
+	if (deezerUserChart != undefined) {
+		deezerUserChartNext = deezerUserChart.next;
+		loadInTable(dDiv, ntTbody, deezerUserChart);
 	}
 }
 
@@ -192,7 +192,7 @@ function deezerProxy(url) {
 	return "https://api.codetabs.com/v1/proxy/?quest=" + url;
 }
 
-let deezerUsuarioChartNext = "";
-let deezerUsuarioChartPosicao = 1;
+let deezerUserChartNext = "";
+let deezerUserChartPosition = 1;
 
-let deezerApiSite = "https://api.deezer.com";
+let deezerApi = "https://api.deezer.com";
