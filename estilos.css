@@ -66,17 +66,23 @@ body {
 
 .bFormDiv h4 {
 	color: white;
+	margin-top: 0px;
 	font-weight: 700;
 	padding-top: 0px;
-	margin-top: 0px;
 	margin-bottom: 0px;
 	display: inline-block;
 }
 
+.bFormDiv img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .bFormDiv a {
+	margin-top: 0px;
 	font-weight: 700;
 	padding-top: 0px;
-	margin-top: 0px;
 	margin-bottom: 0px;
 }
 
@@ -88,32 +94,32 @@ body {
 
 .bFormDiv input[type=radio] {
 	width: 15px;
-    height: 15px;
-    appearance: none;
-    border-radius: 3px;
-    display: inline-grid;
-    place-content: center; 
-    background-color: #fff;
-    border: 2px solid #ccc;
+	height: 15px;
+	appearance: none;
+	border-radius: 3px;
+	display: inline-grid;
+	place-content: center;
+	background-color: #fff;
+	border: 2px solid #ccc;
 }
 
 .bFormDiv input[type=radio]::before {
-    content: "";
-    width: 10px;
-    height: 10px;
-    transform: scale(0);
-    background-color: #fff;
-    transform-origin: bottom left;
-    clip-path: polygon(13% 50%, 34% 66%, 81% 2%, 100% 18%, 39% 100%, 0 71%);
+	content: "";
+	width: 10px;
+	height: 10px;
+	transform: scale(0);
+	background-color: #fff;
+	transform-origin: bottom left;
+	clip-path: polygon(13% 50%, 34% 66%, 81% 2%, 100% 18%, 39% 100%, 0 71%);
 }
 
 .bFormDiv input[type=radio]:checked::before {
-    transform: scale(1);
+	transform: scale(1);
 }
 
-.bFormDiv input[type=radio]:checked{
-    background-color: #268aff;
-    border: 3px solid #268aff;
+.bFormDiv input[type=radio]:checked {
+	background-color: #268aff;
+	border: 3px solid #268aff;
 }
 
 .bFormDiv input[type="text"] {

@@ -1,4 +1,4 @@
-function pesquisar() {
+async function pesquisar() {
 	let ID = document.getElementById("txtID").value;
 	let radioID = document.getElementById("radioID").checked;
 	let Usuario = document.getElementById("txtUsuario").value;
@@ -10,18 +10,27 @@ function pesquisar() {
 	window.localStorage.setItem("RadioUsuario", radioUsuario);
 
 	if (radioUsuario && (Usuario.length > 0)) {
-		solicitar(deezerProxy(deezerApiSite + "/search/user?q=" + Usuario), function (deezerUsuarioID) {
-			solicitarUsuarioChart(deezerUsuarioID.data[0].id);
-		});
-	} else if (radioID && (ID.length > 0)) {
-		solicitarUsuarioChart(ID);
-	} else {
+		let deezerUsuarioID = await solicitar(deezerProxy(deezerApiSite + "/search/user?q=" + Usuario), "Searching username");
+		if (deezerUsuarioID != undefined) {
+			if (deezerUsuarioID.total != 0) {
+				await solicitarUsuarioChart(deezerUsuarioID.data[0].id);
+			}
+			else {
+				alert("Username not found!");
+			}
+		}
+	}
+	else if (radioID && (ID.length > 0)) {
+		await solicitarUsuarioChart(ID);
+	}
+	else {
 		alert("Check and Fill one of the fields!");
 	}
 }
 
-function solicitarUsuarioChart(id) {
-	solicitar(deezerProxy(deezerApiSite + "/user/" + id + "/charts"), function (deezerUsuarioChart) {
+async function solicitarUsuarioChart(id) {
+	let deezerUsuarioChart = await solicitar(deezerProxy(deezerApiSite + "/user/" + id + "/charts"), "Getting charts");
+	if (deezerUsuarioChart != undefined) {
 		deezerUsuarioChartPosicao = 1;
 		deezerUsuarioChartNext = deezerUsuarioChart.next;
 
@@ -32,20 +41,58 @@ function solicitarUsuarioChart(id) {
 
 		let ntTbody = criarTabela(dDiv);
 		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, true);
-	});
+	}
+	else {
+		alert("User chart or ID not found!");
+	}
 }
 
-function solicitar(url, funcao) {
-	let request = new XMLHttpRequest();
-	request.onload = function () {
-		if (request.status == 200) {
-			funcao(JSON.parse(request.responseText));
-		} else {
-			alert("Status code: " + request.status + " -> Meaning: https://developers.deezer.com/api/errors" + "\n" + request.responseText);
+async function solicitar(url, message) {
+	let loader = document.getElementById("loader");
+	let loaderText = document.getElementById("loaderText");
+
+	loader.style.display = "block";
+	loaderText.style.display = "block";
+	loaderText.innerText = "Wait: " + message;
+
+	let promiseReturn = await new Promise(function (resolve) {
+		let xhr = new XMLHttpRequest();
+		xhr.onload = function () {
+			if (xhr.status == 200) {
+				let jsonParsed = JSON.parse(xhr.responseText);
+				if (jsonParsed.error != undefined) {
+					alert(JSON.stringify(jsonParsed, null, " "));
+					resolve(undefined);
+				}
+				else {
+					resolve(jsonParsed);
+				}
+			}
+			else {
+				alert(
+					"Status code: " + xhr.status + "\n" +
+					"Status text: " + xhr.statusText + "\n" +
+					"Response text: " + xhr.responseText
+				);
+				resolve(undefined);
+			}
 		}
-	}
-	request.open("GET", url, true);
-	request.send();
+		xhr.onerror = function () {
+			alert(
+				"Status code: " + xhr.status + "\n" +
+				"Status text: " + xhr.statusText + "\n" +
+				"Response text: " + hr.responseText
+			);
+			resolve(undefined);
+		};
+		xhr.open("GET", url, true);
+		xhr.send();
+	});
+
+	loader.style.display = "none";
+	loaderText.style.display = "none";
+
+	return promiseReturn;
 }
 
 function criarTabela(dDiv) {
@@ -87,7 +134,7 @@ function criarTabela(dDiv) {
 	return ntTbody;
 }
 
-function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, criarBotao) {
+function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart) {
 	for (let i = 0; i < deezerUsuarioChart.data.length; i++) {
 		let tr = document.createElement("tr");
 
@@ -119,7 +166,7 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, criarBotao) {
 		bButton.parentNode.removeChild(bButton);
 	}
 
-	if (criarBotao) {
+	if (deezerUsuarioChart.next != undefined) {
 		let dButton = document.createElement("button");
 		dButton.className = "bButton";
 		dButton.textContent = "Show more";
@@ -133,12 +180,12 @@ function carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, criarBotao) {
 	}
 }
 
-function carregarMais(dDiv, ntTbody) {
-	solicitar(deezerProxy(deezerUsuarioChartNext), function (deezerUsuarioChart) {
+async function carregarMais(dDiv, ntTbody) {
+	let deezerUsuarioChart = await solicitar(deezerProxy(deezerUsuarioChartNext), "Loading more charts");
+	if (deezerUsuarioChart != undefined) {
 		deezerUsuarioChartNext = deezerUsuarioChart.next;
-
-		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart, deezerUsuarioChartNext != undefined);
-	});
+		carregarNaTabela(dDiv, ntTbody, deezerUsuarioChart);
+	}
 }
 
 function deezerProxy(url) {

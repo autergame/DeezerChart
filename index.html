@@ -16,17 +16,21 @@
 					<a href="https://github.com/autergame">autergame</a>
 				</div>
 				<div>
-					<input id="radioUsuario" type="radio" name="radioProcurar" checked/>
+					<input id="radioUsuario" type="radio" name="radioProcurar" checked />
 					<label for="txtUsuario">Username:</label>
 					<input type="text" id="txtUsuario" autocomplete="off" required />
 				</div>
 				<h4>Or</h4>
 				<div>
-					<input id="radioID" type="radio" name="radioProcurar"/>
+					<input id="radioID" type="radio" name="radioProcurar" />
 					<label for="txtID">ID:</label>
 					<input type="text" id="txtID" autocomplete="off" required />
 				</div>
 				<button type="submit" onclick="pesquisar()">Submit</button>
+				<div>
+					<img id="loader" style="display:none" src="loading.svg" />
+					<h4 id="loaderText"></h4>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -94,7 +98,7 @@
 	document.getElementById("txtID").value = localStorage.getItem("ID");
 	document.getElementById("radioID").checked = localStorage.getItem("RadioID") === "true";
 	document.getElementById("txtUsuario").value = localStorage.getItem("Usuario");
-	document.getElementById("radioUsuario").checked = localStorage.getItem("RadioUsuario")  === "true";
+	document.getElementById("radioUsuario").checked = localStorage.getItem("RadioUsuario") === "true";
 </script>
 
 <script src="funcoes.js"></script>
