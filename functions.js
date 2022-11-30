@@ -29,7 +29,7 @@ async function submit() {
 }
 
 async function loadUserChart(id) {
-	let deezerUserChart = await request(deezerProxy(deezerApi + "/user/" + id + "/charts"), "Getting charts");
+	let deezerUserChart = await request(deezerProxy(deezerApi + "/user/" + id + "/charts/tracks"), "Getting charts tracks");
 	if (deezerUserChart != undefined) {
 		deezerUserChartPosition = 1;
 		deezerUserChartNext = deezerUserChart.next;
