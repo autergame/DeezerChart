@@ -13,7 +13,7 @@ async function submit() {
 		await loadUserChart(ID);
 	}
 	else if (radioUsername && (Username.length > 0)) {
-		let deezerUserID = await request(deezerProxy(deezerApi + "/search/user?q=" + Username), "Searching ID from username");
+		let deezerUserID = await request(corsProxy(deezerApi + "/search/user?q=" + Username), "Searching ID from username");
 		if (deezerUserID != undefined) {
 			if (deezerUserID.total != 0) {
 				await loadUserChart(deezerUserID.data[0].id);
@@ -29,7 +29,7 @@ async function submit() {
 }
 
 async function loadUserChart(id) {
-	let deezerUserChart = await request(deezerProxy(deezerApi + "/user/" + id + "/charts/tracks"), "Getting charts tracks");
+	let deezerUserChart = await request(corsProxy(deezerApi + "/user/" + id + "/charts/tracks"), "Getting charts tracks");
 	if (deezerUserChart != undefined) {
 		deezerUserChartPosition = 1;
 		deezerUserChartNext = deezerUserChart.next;
@@ -181,15 +181,15 @@ function loadInTable(dDiv, ntTbody, deezerUserChart) {
 }
 
 async function showMore(dDiv, ntTbody) {
-	let deezerUserChart = await request(deezerProxy(deezerUserChartNext), "Loading more charts");
+	let deezerUserChart = await request(corsProxy(deezerUserChartNext), "Loading more charts");
 	if (deezerUserChart != undefined) {
 		deezerUserChartNext = deezerUserChart.next;
 		loadInTable(dDiv, ntTbody, deezerUserChart);
 	}
 }
 
-function deezerProxy(url) {
-	return "https://api.codetabs.com/v1/proxy/?quest=" + url;
+function corsProxy(url) {
+	return "https://corsproxy.io/?url=" + encodeURIComponent(url);
 }
 
 let deezerUserChartNext = "";
